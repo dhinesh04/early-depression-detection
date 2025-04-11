@@ -5,8 +5,8 @@ import os
 import pdb
 from tqdm import tqdm
 
-xml_folder = "/users/PAS2912/dhinesh20/final_project/eRisk25-datasets/task2-contextualized-early-depression/training_data"
-output_folder = "/users/PAS2912/dhinesh20/final_project/json_output"
+xml_folder = "training_data"
+output_folder = "json_output"
 years = os.listdir(xml_folder)
 os.makedirs(output_folder, exist_ok=True)
 

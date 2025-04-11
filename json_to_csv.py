@@ -6,6 +6,7 @@ import re
 csv_folder = "csv_output"
 os.makedirs(csv_folder, exist_ok=True)
 folder_path = "json_output"
+os.makedirs(folder_path, exist_ok=True)
 json_folder = os.listdir("json_output")
 csv_header = ["ID", "TITLE", "DATE", "INFO", "TEXT"]
 
@@ -26,7 +27,11 @@ def clean_text(text):
     # Remove remaining URL artifacts and punctuation
     text = re.sub(r'[^\w\s]', '', text)
 
-    return text.strip()
+    tokens = text.lower().split()
+    tokens = [t for t in tokens if t.isalpha() and len(t) > 2]
+
+    return " ".join(tokens).strip()
+    # return text.strip()
 
 def iterate_csv(csv_folder):
     folder_list = os.listdir(csv_folder)
