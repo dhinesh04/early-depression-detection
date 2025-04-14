@@ -7,6 +7,9 @@ csv_folder = "csv_output"
 os.makedirs(csv_folder, exist_ok=True)
 folder_path = "json_output"
 json_folder = os.listdir("json_output")
+folder_path = "json_output"
+os.makedirs(folder_path, exist_ok=True)
+json_folder = os.listdir("json_output")
 csv_header = ["ID", "TITLE", "DATE", "INFO", "TEXT"]
 
 def clean_text(text):
@@ -27,6 +30,24 @@ def clean_text(text):
     text = re.sub(r'[^\w\s]', '', text)
 
     return text.strip()
+
+    # Remove markdown links: [text](url)
+    text = re.sub(r'\[.*?\]\(https?://[^\)]+\)', '', text)
+
+    # Remove plain URLs (https or http)
+    text = re.sub(r'https?://\S+', '', text)
+
+    # Remove things like `url=...` (used in some Google redirect links)
+    text = re.sub(r'url=https?%3A%2F%2F\S+', '', text)
+
+    # Remove remaining URL artifacts and punctuation
+    text = re.sub(r'[^\w\s]', '', text)
+
+    tokens = text.lower().split()
+    tokens = [t for t in tokens if t.isalpha() and len(t) > 2]
+
+    return " ".join(tokens).strip()
+    # return text.strip()
 
 def iterate_csv(csv_folder):
     folder_list = os.listdir(csv_folder)
@@ -76,5 +97,3 @@ def convert_to_csv():
 
 convert_to_csv()
 iterate_csv(csv_folder)
-        
-
