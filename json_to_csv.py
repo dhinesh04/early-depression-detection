@@ -6,8 +6,6 @@ import re
 csv_folder = "csv_output"
 os.makedirs(csv_folder, exist_ok=True)
 folder_path = "json_output"
-json_folder = os.listdir("json_output")
-folder_path = "json_output"
 os.makedirs(folder_path, exist_ok=True)
 json_folder = os.listdir("json_output")
 csv_header = ["ID", "TITLE", "DATE", "INFO", "TEXT"]
