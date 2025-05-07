@@ -11,23 +11,21 @@ from transformers import (
     BertForSequenceClassification,
     get_scheduler
 )
-# from transformers import DebertaV2Tokenizer, DebertaV2ForSequenceClassification
 from transformers import LongformerForSequenceClassification, LongformerTokenizer
-
+from transformers import AutoTokenizer, AutoModel
+from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
 # Load dataset from JSON
-with open("full_dataset.json") as f:
+with open("prepared_balanced_json/full_dataset.json") as f:
     data = json.load(f)
-model_name = "allenai/longformer-base-4096"
+model_name = "mental/mental-bert-base-uncased"
 
 # Check GPU availability
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(f"Using device: {device}")
 
 # Tokenizer
-# tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
-# tokenizer = DebertaV2Tokenizer.from_pretrained("microsoft/deberta-v3-base")
-tokenizer = LongformerTokenizer.from_pretrained(model_name)
+tokenizer = AutoTokenizer.from_pretrained("mental/mental-bert-base-uncased")
 
 # Prepares input for BERT
 def prepare_input(texts):
@@ -42,9 +40,7 @@ class MentalHealthDataset(Dataset):
         self.max_len= max_len 
     def __len__(self):
         return len(self.data)
-    # def __getitem__(self, idx):
-    #     item = self.data[idx]
-    #     encoding = prepare_input(item["texts"])
+
     def __getitem__(self, idx):
         item = self.data[idx]
         text = " ".join(item["texts"])
@@ -77,9 +73,7 @@ train_loader = DataLoader(MentalHealthDataset(train_data,tokenizer), batch_size=
 val_loader = DataLoader(MentalHealthDataset(val_data,tokenizer), batch_size=4)#tokenizer
 
 # Load model
-# model = BertForSequenceClassification.from_pretrained("bert-base-uncased", num_labels=2)
-# model = DebertaV2ForSequenceClassification.from_pretrained("microsoft/deberta-v3-base", num_labels=2)
-model = LongformerForSequenceClassification.from_pretrained(model_name, num_labels=2)
+model = AutoModelForSequenceClassification.from_pretrained("mental/mental-bert-base-uncased", num_labels=2)
 model.to(device)
 
 # Optimizer
